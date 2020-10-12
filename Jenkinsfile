@@ -22,8 +22,8 @@ pipeline {
       steps {
         echo 'Deploying mule project due to the latest code commit...'
         echo 'Deploying to the configured environment....'
-        bat 'mvn -e -X clean -Dmule.environment=SANDBOX -Dmule.app.name=test-ajit-singh deploy'
-  bat 'mvn package deploy -DmuleDeploy -Dusername=${ANYPOINT_CREDENTIALS_USR} -Dpassword=${ANYPOINT_CREDENTIALS_PSW} -DworkerType=Micro -Dworkers=1 -Dregion=us-east-2'
+        
+  bat 'mvn -e -X package deploy -DmuleDeploy -Dusername=${ANYPOINT_CREDENTIALS_USR} -Dpassword=${ANYPOINT_CREDENTIALS_PSW} -DworkerType=Micro -Dworkers=1 -Dregion=us-east-2'
       }
 	  
 	}
