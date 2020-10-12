@@ -44,7 +44,7 @@
 						<muleVersion>4.3.0</muleVersion>
 						<username>${username}</username>
 						<password>${password}</password>
-						<applicationName>ajit-singh-22</applicationName>
+						<applicationName>ajit-singh-23</applicationName>
 						<environment>Sandbox</environment>
 						<workerType>${workerType}</workerType>
 						<workers>1</workers>
