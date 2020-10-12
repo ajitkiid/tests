@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7243e4a4-8cc2-4687-a523-e7af8559d9e9" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<configuration doc:name="Configuration" doc:id="279a444a-c0ef-4d47-aa5f-b925f064c4a0" defaultErrorHandler-ref="testsError_Handler" />
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="42db5dd2-c93c-4f5f-aaa0-f398c0c58ac3" >
+		<wsc:connection wsdlLocation="http://localhost:8081/booking?WSDL" service="BookingService" port="BookingServicePort" address="http://localhost:8081/booking" >
+			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+		</wsc:connection>
+	</wsc:config>
+	<flow name="testsFlow" doc:id="bcc2f00e-5b0b-4bee-b79d-c11e88b23649" >
+		<http:listener doc:name="Listener" doc:id="caec3f7e-da4c-408f-9ed2-c311aea21cb7" config-ref="HTTP_Listener_config" path="/test"/>
+		<ee:transform doc:name="Transform Message" doc:id="62cc4b91-8f84-4a9b-9781-f444adf8c648" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="InsertBooking" doc:name="Consume" doc:id="a21040f0-f9df-458b-b05c-ee0f31c3b983" config-ref="Web_Service_Consumer_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="7ab488bb-7503-438c-9b6f-a61ecdc76fd0" />
+	</flow>
+	<error-handler name="testsError_Handler" doc:id="84631576-013d-4b85-b852-98d5055d4737" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="347cceec-5704-47ac-ba50-0a0bbe4a348f" type="ANY">
+			<logger level="INFO" doc:name="Logger" doc:id="7e61eb4e-360c-4196-b0f7-fd445414e8ba" />
+			<validation:is-email doc:name="Is email" doc:id="01d20a1d-b531-4916-9133-7bb6a0029d24" email="asdfads"/>
+			<logger level="INFO" doc:name="Logger" doc:id="36a02d4a-7034-4b7d-bd37-2c1ceffa3a9a" />
+		</on-error-propagate>
+	</error-handler>
+</mule>
